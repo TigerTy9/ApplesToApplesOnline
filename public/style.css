@@ -1,0 +1,745 @@
+/* --- CSS Variables (Theme) --- */
+:root {
+  --font-main: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --green-apple: #6DBC2B;
+  --green-apple-dark: #5a9d24;
+  --red-apple: #E63946;
+  --red-apple-dark: #c92c3a;
+  --color-dark: #1D3557;
+  --color-light: #F1FAEE;
+  --color-grey: #A8DADC;
+  --color-card-light: #ffffff;
+  --shadow-light: 0 4px 15px rgba(0, 0, 0, 0.05);
+  --shadow-medium: 0 8px 25px rgba(0, 0, 0, 0.1);
+  --radius: 12px;
+}
+
+/* --- Base & Animations --- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes dealIn {
+  from { opacity: 0; transform: translateY(50px) scale(0.9); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+body {
+  font-family: var(--font-main);
+  background: var(--color-light);
+  color: var(--color-dark);
+  margin: 0;
+  padding: 10px; /* Mobile-first padding */
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+#app-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* --- Mute Button --- */
+#mute-btn {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 2000;
+  width: auto;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  background-color: rgba(255, 255, 255, 0.8);
+  color: var(--color-dark);
+  border: 1px solid var(--color-grey);
+  box-shadow: var(--shadow-light);
+}
+#mute-btn.muted {
+  background-color: var(--color-dark);
+  color: white;
+}
+audio {
+  display: none;
+}
+
+
+/* --- Screen Transitions --- */
+.screen {
+  display: none; /* Hide all screens by default */
+  animation: fadeIn 0.5s ease-out;
+}
+.screen.active {
+  display: block; /* Show only the active one */
+}
+.hidden {
+  display: none !important;
+}
+
+/* --- Home & Lobby (Mobile-First) --- */
+.screen-content {
+  margin: 10px auto;
+  background: var(--color-card-light);
+  padding: 20px 15px; /* Mobile-first padding */
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-medium);
+  text-align: center;
+}
+
+h1 {
+  font-size: 2rem; /* Smaller for mobile */
+  margin: 0;
+  color: var(--color-dark);
+}
+.subtitle {
+  font-size: 1.1rem;
+  margin-top: -10px;
+  margin-bottom: 20px;
+  color: var(--green-apple);
+  font-weight: 600;
+}
+
+input[type="text"] {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 15px 0;
+  padding: 14px;
+  font-size: 1rem;
+  font-family: var(--font-main);
+  border: 2px solid var(--color-grey);
+  border-radius: 8px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+input[type="text"]:focus {
+  outline: none;
+  border-color: var(--green-apple);
+  box-shadow: 0 0 0 3px rgba(109, 188, 43, 0.3);
+}
+
+button {
+  padding: 14px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: var(--font-main);
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  margin: 5px 0; /* Stack buttons */
+  width: 100%;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+button:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  background: var(--color-grey);
+  margin: 20px 0;
+}
+
+#error-message {
+  color: var(--red-apple);
+  font-weight: 600;
+  margin-top: 15px;
+}
+#join-status-message {
+  color: var(--color-dark);
+  font-weight: 600;
+  margin: 15px 0 0 0;
+}
+
+
+/* --- Rejoin Block --- */
+#rejoin-block {
+  margin-top: 20px;
+}
+#rejoin-block p {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 10px 0;
+}
+#rejoin-block button {
+  background-color: var(--color-dark);
+  color: white;
+}
+#rejoin-block button:hover {
+  background-color: #3a5a8a; /* A lighter dark blue */
+}
+
+
+#lobby-screen h2 {
+  font-size: 1.3rem;
+  color: var(--color-dark);
+}
+#lobby-screen h2 span {
+  font-family: monospace;
+  color: var(--red-apple);
+  background: #fdf2f2;
+  padding: 6px 12px;
+  border-radius: 6px;
+  letter-spacing: 2px;
+  font-size: 1.5rem;
+  display: block; /* Stack on mobile */
+  margin-top: 10px;
+}
+
+/* --- Game Settings --- */
+#game-settings {
+  background: var(--color-light);
+  border-radius: 8px;
+  padding: 10px;
+  margin: 20px 0;
+}
+#game-settings h3 {
+  margin: 0 0 10px 0;
+}
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.1rem;
+}
+.setting-controls {
+  display: flex;
+  align-items: center;
+}
+.setting-controls span {
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin: 0 10px;
+}
+.setting-btn {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  font-size: 1.5rem;
+  line-height: 40px;
+  text-align: center;
+  background-color: var(--color-grey);
+}
+
+
+#player-list {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 20px;
+}
+#player-list li {
+  font-size: 1rem;
+  margin: 8px 0;
+  padding: 10px;
+  background: var(--color-light);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  display: flex; /* For kick button */
+  justify-content: space-between;
+  align-items: center;
+}
+#player-list li.disconnected {
+  opacity: 0.5;
+  font-style: italic;
+}
+#player-list li.spectating {
+  opacity: 0.7;
+  font-style: italic;
+}
+
+/* --- Game Screen (Mobile-First) --- */
+#game-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 15px;
+  padding: 10px;
+  background: var(--color-card-light);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-light);
+}
+
+#scoreboard {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+}
+.player-score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--color-light);
+  padding: 5px 10px;
+  border-radius: 8px;
+  min-width: 60px;
+  transition: all 0.2s ease;
+  position: relative; /* For kick button */
+}
+.player-score.judge {
+  background: var(--green-apple);
+  color: white;
+  box-shadow: 0 0 10px rgba(109, 188, 43, 0.5);
+}
+.player-score.disconnected {
+  background: #ccc;
+  color: #777;
+  opacity: 0.7;
+}
+.player-score.spectating {
+  opacity: 0.7;
+  border: 2px dashed var(--color-grey);
+}
+.score-name {
+  font-size: 0.7rem;
+  font-weight: 600;
+  opacity: 0.8;
+}
+.score-value {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+/* Game Info Wrapper */
+#game-info {
+  text-align: center;
+  margin: 10px 0 0 0;
+}
+#game-status {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--color-dark);
+}
+#room-code-game {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-dark);
+  opacity: 0.7;
+  font-family: monospace;
+  letter-spacing: 1px;
+  margin-top: 4px;
+}
+
+.hand-status {
+  width: 100%;
+  text-align: center;
+  color: var(--color-dark);
+  opacity: 0.8;
+  font-size: 1.1rem;
+}
+
+/* --- Cards (Mobile-First) --- */
+.table {
+  display: flex;
+  flex-direction: column; /* Stack green card on top */
+  justify-content: center;
+  align-items: center;
+  min-height: 0;
+  padding-bottom: 15px;
+  border-bottom: 2px solid var(--color-grey);
+}
+#played-cards-area {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-left: 0; /* No margin on mobile */
+  margin-top: 10px;
+}
+.hand {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 10px;
+  padding-top: 10px;
+  min-height: 0;
+}
+
+.card {
+  box-sizing: border-box;
+  width: 85px; /* Smaller cards for mobile */
+  height: 120px;
+  border-radius: 8px;
+  padding: 8px;
+  margin: 4px;
+  background: var(--color-card-light);
+  box-shadow: var(--shadow-light);
+  font-size: 0.75rem; /* Smaller font for mobile */
+  font-weight: 600;
+  line-height: 1.4;
+  transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border: 3px solid transparent; /* For selection */
+}
+.card span {
+  display: block;
+}
+
+.green-card {
+  background-color: var(--green-apple);
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 700;
+  width: 120px; /* Green card can be a bit bigger */
+  height: 150px;
+  border-color: var(--green-apple-dark);
+}
+.red-card {
+  background-color: var(--red-apple);
+  color: white;
+  border-color: var(--red-apple-dark);
+  animation: dealIn 0.5s ease-out backwards;
+  animation-delay: calc(var(--delay-index, 0) * 80ms);
+}
+.red-card.placeholder {
+  background: #fff;
+  border: 3px dashed var(--color-grey);
+  color: var(--color-grey);
+  font-weight: 700;
+}
+
+/* Card Interactivity (Mobile) */
+.hand .red-card.playable {
+  cursor: pointer;
+}
+.hand .red-card.playable:hover {
+  transform: translateY(-5px); /* Less hover effect */
+  box-shadow: var(--shadow-medium);
+}
+.hand .red-card.played {
+  transform: scale(0.95);
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+#played-cards-area .red-card {
+  animation: fadeIn 0.3s ease;
+}
+#played-cards-area .red-card.judging {
+  cursor: pointer;
+}
+#played-cards-area .red-card.judging:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-medium);
+}
+
+/* Winner Banner */
+#winner-announcement {
+  text-align: center;
+  background-color: var(--color-dark);
+  color: var(--color-light);
+  padding: 15px;
+  margin: 15px auto;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-medium);
+  opacity: 0; /* Hidden by default */
+  animation: fadeIn 0.5s ease-out 2.5s forwards; /* Delay corresponds to reveal */
+}
+#winner-announcement h4 {
+  font-size: 1.1rem;
+  margin: 0 0 10px 0;
+  color: var(--green-apple);
+}
+#winner-announcement p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* =========================================== */
+/* --- Desktop Styles (768px and up) --- */
+/* =========================================== */
+@media (min-width: 768px) {
+  body {
+    padding: 20px;
+  }
+
+  .screen-content {
+    max-width: 450px; /* Restore max-width */
+    padding: 30px 40px;
+    margin: 40px auto;
+  }
+
+  h1 {
+    font-size: 2.5rem; /* Enlarge */
+  }
+
+  button {
+    width: auto; /* Allow buttons to be side-by-side */
+    margin: 5px;
+  }
+
+  #lobby-screen h2 {
+    font-size: 1.5rem;
+  }
+  #lobby-screen h2 span {
+    font-size: 1.8rem;
+    display: inline-block; /* Put on same line */
+    margin-top: 0;
+  }
+
+  #player-list li {
+    font-size: 1.2rem;
+  }
+
+  /* Game Screen */
+  #game-header {
+    padding: 15px;
+  }
+  
+  #scoreboard {
+    gap: 20px;
+  }
+
+  .player-score {
+    padding: 8px 15px;
+    min-width: 80px;
+  }
+  .score-name {
+    font-size: 0.9rem;
+  }
+  .score-value {
+    font-size: 1.5rem;
+  }
+  
+  /* Desktop game info */
+  #game-info {
+    margin-top: 15px;
+  }
+  #game-status {
+    font-size: 1.2rem;
+  }
+
+  /* --- Cards (Desktop) --- */
+  .table {
+    flex-direction: row; /* Side-by-side layout */
+    min-height: 240px;
+    padding-bottom: 20px;
+  }
+  #played-cards-area {
+    margin-left: 20px;
+    margin-top: 0;
+  }
+  .hand {
+    min-height: 220px;
+    padding-top: 20px;
+    margin-top: 20px;
+  }
+
+  .card {
+    width: 150px; /* Enlarge cards */
+    height: 210px;
+    font-size: 1.05rem;
+    padding: 15px;
+    margin: 10px;
+    border-radius: var(--radius);
+  }
+  .green-card {
+    font-size: 1.2rem;
+    width: 150px; /* Match red cards */
+    height: 210px;
+  }
+  
+  /* Interactivity (Desktop) */
+  .hand .red-card.playable:hover {
+    transform: translateY(-12px) scale(1.05); /* Restore larger hover */
+    box-shadow: var(--shadow-medium);
+  }
+  #played-cards-area .red-card.judging:hover {
+    transform: translateY(-12px) scale(1.05);
+    box-shadow: var(--shadow-medium);
+  }
+}
+
+/* --- Modal Styles --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s;
+}
+.modal-content {
+  background: white;
+  padding: 25px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-medium);
+  text-align: center;
+  width: 90%;
+  max-width: 400px;
+}
+.modal-content h3 {
+  margin-top: 0;
+  color: var(--color-dark);
+}
+.modal-content p {
+  font-size: 1.1rem;
+  margin: 15px 0;
+}
+.modal-content p span {
+  font-weight: 700;
+  color: var(--red-apple);
+}
+.modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+.modal-buttons button {
+  width: auto;
+  flex: 1;
+}
+#approve-join-btn {
+  background-color: var(--green-apple);
+  color: white;
+}
+#deny-join-btn {
+  background-color: var(--red-apple);
+  color: white;
+}
+
+/* --- Host Admin Styles --- */
+#host-admin-panel {
+  margin-top: 15px;
+  animation: fadeIn 0.3s;
+}
+#host-admin-panel button {
+  background-color: var(--color-dark);
+  color: white;
+  width: auto;
+  padding: 8px 15px;
+  font-size: 0.9rem;
+}
+#host-admin-panel button:hover {
+  background-color: #3a5a8a;
+}
+
+.kick-player-btn {
+  background: var(--red-apple);
+  color: white;
+  border: none;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  margin: 0;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  line-height: 24px;
+  text-align: center;
+}
+.kick-player-btn:hover {
+  background: var(--red-apple-dark);
+}
+
+.player-score .kick-player-btn {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 20px;
+  height: 20px;
+  font-size: 0.8rem;
+  line-height: 20px;
+}
+
+/* --- Winning Card Reveal Styles --- */
+#played-cards-area .card.is-winner {
+  transform: translateY(-10px) scale(1.1) !important;
+  border-color: gold;
+  box-shadow: 0 0 20px 5px gold;
+  z-index: 10;
+  opacity: 1 !important;
+  transition-delay: 2s; /* 3. Pop winner */
+}
+
+#played-cards-area .card.is-loser {
+  transform: scale(0.9);
+  opacity: 0.3;
+  filter: grayscale(100%);
+  transition-delay: 1s; /* 2. Fade losers */
+}
+
+@media (min-width: 768px) {
+  #played-cards-area .card.is-winner {
+    transform: translateY(-15px) scale(1.15) !important;
+  }
+}
+
+/* --- Game Over Screen --- */
+#game-over-screen #final-winner-display {
+  color: var(--green-apple);
+  margin-bottom: 20px;
+}
+#final-scores-list {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 30px;
+}
+#final-scores-list li {
+  font-size: 1.2rem;
+  font-weight: 600;
+  padding: 10px;
+  margin: 5px 0;
+  background: var(--color-light);
+  border-radius: 8px;
+}
+#final-scores-list li:first-child {
+  background: gold;
+  color: var(--color-dark);
+  font-size: 1.4rem;
+}
+#play-again-btn {
+  background-color: var(--green-apple);
+  color: white;
+}
+
+/* --- NEW: Splash Screen Style --- */
+#splash-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--color-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5000;
+  cursor: pointer;
+}
+.splash-content {
+  text-align: center;
+  color: white;
+  animation: fadeIn 1s;
+}
+.splash-content h1 {
+  font-size: 3rem;
+  color: white;
+}
+.splash-content p {
+  font-size: 1.2rem;
+  color: var(--green-apple);
+  font-weight: 600;
+  animation: fadeIn 1s 0.5s backwards;
+}
+
+@media (min-width: 768px) {
+  .splash-content h1 {
+    font-size: 5rem;
+  }
+  .splash-content p {
+    font-size: 1.5rem;
+  }
+}
