@@ -775,12 +775,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     // This check *must* go INSIDE this block
-    if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
-      volumeSlider.disabled = true;
+   if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
+      console.log('iOS device detected. Hiding volume slider.');
+      volumeSlider.style.display = 'none'; // <-- THIS HIDES IT
       volumeSlider.title = "Use your device buttons to adjust volume";
     }
   }
 });
+
 
 
 
