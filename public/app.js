@@ -705,3 +705,29 @@ function createRedCard(cardText) {
   cardDiv.innerHTML = `<span>${cardText}</span>`; 
   return cardDiv;
 }
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Select all audio elements on the page
+  const allAudioElements = document.querySelectorAll('audio');
+  const volumeSlider = document.getElementById('volume-slider');
+
+  // If the slider element exists, run the code
+  if (volumeSlider) {
+    // Function to set the volume for ALL audio tags
+    const setGlobalVolume = (volume) => {
+      allAudioElements.forEach(audio => {
+        audio.volume = volume;
+      });
+    };
+
+    // Set the initial volume from the slider's default value (0.5)
+    setGlobalVolume(volumeSlider.value);
+
+    // Add an event listener to the slider
+    volumeSlider.addEventListener('input', (event) => {
+      const newVolume = event.target.value;
+      setGlobalVolume(newVolume);
+    });
+  }
+});
