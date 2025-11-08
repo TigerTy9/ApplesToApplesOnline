@@ -275,14 +275,37 @@ socket.on('error', (message) => {
 // --- Button Click Handlers ---
 
 splashScreen.onclick = async () => {
-  if (hasInteracted) return; 
+  if (hasInteracted) return;
   
   splashScreen.querySelector('p').textContent = 'Unlocking audio...';
-  
-  await primeAudio();
-  
-  playMusic('splash'); 
-  showScreen('home'); 
+
+  try {
+    // Explicitly resume any suspended AudioContext
+    if (typeof AudioContext !== 'undefined') {
+      const ctx = new AudioContext();
+      if (ctx.state === 'suspended') await ctx.resume();
+    } else if (typeof webkitAudioContext !== 'undefined') {
+      const ctx = new webkitAudioContext();
+      if (ctx.state === 'suspended') await ctx.resume();
+    }
+
+    // Directly play and pause each track once — this must happen in a tap handler
+    for (const a of Object.values(audio)) {
+      try {
+        await a.play();
+        a.pause();
+        a.currentTime = 0;
+      } catch (err) {
+        console.warn('Mobile unlock failed for a track (expected on iOS)', err.name);
+      }
+    }
+
+    hasInteracted = true;
+    playMusic('splash');
+    showScreen('home');
+  } catch (e) {
+    console.error('Audio unlock error:', e);
+  }
 };
 
 createGameBtn.onclick = () => {
@@ -758,3 +781,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // --- End of final volume code ---
+
