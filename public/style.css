@@ -613,6 +613,9 @@ hr {
 #host-admin-panel {
   margin-top: 15px;
   animation: fadeIn 0.3s;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
 }
 #host-admin-panel button {
   background-color: var(--color-dark);
@@ -624,6 +627,13 @@ hr {
 #host-admin-panel button:hover {
   background-color: #3a5a8a;
 }
+#skip-round-btn {
+  background-color: var(--red-apple);
+}
+#skip-round-btn:hover {
+  background-color: var(--red-apple-dark);
+}
+
 
 .kick-player-btn {
   background: var(--red-apple);
@@ -695,17 +705,20 @@ hr {
   background: var(--color-light);
   border-radius: 8px;
 }
-#final-scores-list li:first-child {
+/* --- THIS IS THE FIX --- */
+#final-scores-list li.winner-row {
   background: gold;
   color: var(--color-dark);
   font-size: 1.4rem;
+  font-weight: 700;
 }
+/* --- END FIX --- */
 #play-again-btn {
   background-color: var(--green-apple);
   color: white;
 }
 
-/* --- NEW: Splash Screen Style --- */
+/* --- Splash Screen Style --- */
 #splash-screen {
   position: fixed;
   top: 0;
