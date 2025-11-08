@@ -307,16 +307,26 @@ socket.on('error', (message) => {
 
 // --- Button Click Handlers ---
 
-splashScreen.onclick = async () => {
+// --- [FIX 2] Correct Mobile Audio Unlock ---
+splashScreen.onclick = () => { // <-- 1. REMOVED 'async'
   if (hasInteracted) return; 
   
-  splashScreen.querySelector('p').textContent = 'Unlocking audio...';
+  // 2. SET THE FLAG FIRST! This is the most important part.
+  hasInteracted = true;
   
-  await primeAudio();
+  splashScreen.querySelector('p').textContent = 'Loading...';
   
+  // 3. PLAY THE MUSIC. This is the real "unlock"
   playMusic('splash'); 
+  
+  // 4. Show the next screen.
   showScreen('home'); 
+  
+  // 5. NOW, prime (pre-load) all *other* audio tracks
+  // in the background without blocking.
+  primeAudio(); // <-- Note: no 'await' here
 };
+// --- [END FIX 2] ---
 
 createGameBtn.onclick = () => {
   playMusic('lobby');
@@ -771,6 +781,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 });
+
 
 
 
