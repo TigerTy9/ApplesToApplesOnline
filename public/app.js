@@ -111,7 +111,18 @@ async function primeAudio() {
   return true;
 }
 
+// --- THIS IS THE FIX ---
+
 async function playMusic(trackName) {
+  // 1. ADD THIS CHECK:
+  // If this track is already the one supposed to be playing,
+  // just ignore this request. This prevents restart-stutter
+  // and multiple tracks.
+  if (currentMusic === trackName) {
+    return;
+  }
+
+  // 2. This part is the same (it stops the *old* music)
   Object.keys(audio).forEach(key => {
     if (key !== 'winnerReveal' && key !== trackName && !audio[key].paused) {
       audio[key].pause();
@@ -119,16 +130,22 @@ async function playMusic(trackName) {
     }
   });
 
+  // 3. Set the new track as current
   currentMusic = trackName;
   
+  // 4. Handle 'null' (for stopping music)
   if (isMuted || !trackName) {
     return;
   }
   
+  // 5. Guards (same as before, but one is removed)
   if (!hasInteracted) return; 
   if (!audio[trackName]) return; 
-  if (!audio[trackName].paused) return;
+  
+  // We remove the '!audio[trackName].paused' check because
+  // our new "if (currentMusic === trackName)" check is better.
 
+  // 6. Play the new track
   try {
     audio[trackName].currentTime = 0;
     await audio[trackName].play();
@@ -136,6 +153,8 @@ async function playMusic(trackName) {
     console.warn("Audio play failed.", err);
   }
 }
+
+// --- END FIX ---
 
 async function playSoundEffect(soundName) {
   if (isMuted || !hasInteracted || !audio[soundName]) return;
@@ -736,3 +755,4 @@ if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
   volumeSlider.disabled = true;
   volumeSlider.title = "Use your device buttons to adjust volume";
 }
+
