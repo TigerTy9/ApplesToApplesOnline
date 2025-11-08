@@ -742,13 +742,7 @@ function createRedCard(cardText) {
 }
 
 
-// --- Shared AudioContext & Volume Control Setup ---
-
-// Create a shared audio context and gain node
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-const gainNode = audioCtx.createGain();
-gainNode.connect(audioCtx.destination);
-
+// --- Shared AudioContext & Volume Control Setup --
 // Connect all your audio elements to the shared gain node
 function connectAudioElement(audioEl) {
   try {
@@ -780,3 +774,4 @@ document.addEventListener('touchstart', () => {
 document.addEventListener('click', () => {
   if (audioCtx.state === 'suspended') audioCtx.resume();
 }, { once: true });
+
