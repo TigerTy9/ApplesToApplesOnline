@@ -61,18 +61,6 @@ const audio = {
   winner: document.getElementById('music-winner'),
   winnerReveal: document.getElementById('winner-reveal')
 };
-
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-const gainNode = audioCtx.createGain();
-gainNode.connect(audioCtx.destination);
-
-function connectAudioElement(audioEl) {
-  const source = audioCtx.createMediaElementSource(audioEl);
-  source.connect(gainNode);
-}
-
-Object.values(audio).forEach(connectAudioElement);
-
 let currentMusic = null;
 let isMuted = false;
 let hasInteracted = false;
@@ -742,36 +730,54 @@ function createRedCard(cardText) {
 }
 
 
-// --- Shared AudioContext & Volume Control Setup --
-// Connect all your audio elements to the shared gain node
-function connectAudioElement(audioEl) {
-  try {
-    const source = audioCtx.createMediaElementSource(audioEl);
-    source.connect(gainNode);
-  } catch (e) {
-    console.warn("Audio already connected or failed to connect:", e.message);
+// --- [FINAL] Volume Slider & Mobile Unlock ---
+
+document.addEventListener('DOMContentLoaded', () => {
+  const allAudioElements = document.querySelectorAll('audio');
+  const volumeSlider = document.getElementById('volume-slider');
+
+  // Stop if we're missing the key elements
+  if (!volumeSlider || !allAudioElements.length) {
+    console.error("Volume controls not found, cannot initialize.");
+    return;
   }
-}
-Object.values(audio).forEach(connectAudioElement);
 
-// Handle volume slider
-const volumeSlider = document.getElementById('volume-slider');
-if (volumeSlider) {
-  // Set initial slider and gain value
-  gainNode.gain.value = volumeSlider.value / 100;
+  // 1. This is our single, simple function to set all audio volumes
+  const applySliderVolume = () => {
+    // Get the current value from the slider
+    const newVolume = volumeSlider.value;
+    
+    // Apply this volume to every single <audio> tag
+    allAudioElements.forEach(audio => {
+      audio.volume = newVolume;
+    });
+  };
 
-  // Update gain dynamically when user adjusts slider
-  volumeSlider.addEventListener('input', () => {
-    gainNode.gain.value = volumeSlider.value / 100;
-  });
-}
+  // 2. Set volume on page load (for PCs, will be ignored on mobile)
+  applySliderVolume();
 
-// Unlock audio on first interaction (mobile browsers)
-document.addEventListener('touchstart', () => {
-  if (audioCtx.state === 'suspended') audioCtx.resume();
-}, { once: true });
+  // 3. Set volume every time the slider is moved (works for all platforms)
+  volumeSlider.addEventListener('input', applySliderVolume);
 
-document.addEventListener('click', () => {
-  if (audioCtx.state === 'suspended') audioCtx.resume();
-}, { once: true });
+  // 4. The "One-Time-Only" Initial Unlock for Mobile
+  // This function will run exactly once on the user's first tap.
+  const firstInteractionHandler = () => {
+    
+    // Apply the slider's current value.
+    // This is the command that will now work on mobile.
+    applySliderVolume();
 
+    // Now, remove this listener from all events
+    // so it never, ever runs again.
+    document.body.removeEventListener('click', firstInteractionHandler);
+    document.body.removeEventListener('touchstart', firstInteractionHandler);
+    document.body.removeEventListener('mousedown', firstInteractionHandler);
+  };
+
+  // 5. Attach the one-time listener to all possible "first tap" events
+  document.body.addEventListener('click', firstInteractionHandler);
+  document.body.addEventListener('touchstart', firstInteractionHandler);
+  document.body.addEventListener('mousedown', firstInteractionHandler);
+});
+
+// --- End of final volume code ---
