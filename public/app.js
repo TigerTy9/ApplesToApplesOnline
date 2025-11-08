@@ -111,60 +111,74 @@ async function primeAudio() {
   return true;
 }
 
-// --- THIS IS THE FIX ---
+// --- [FIX] Replaced async playMusic function ---
 
-async function playMusic(trackName) {
-  // 1. ADD THIS CHECK:
-  // If this track is already the one supposed to be playing,
-  // just ignore this request. This prevents restart-stutter
-  // and multiple tracks.
-  if (currentMusic === trackName) {
-    return;
-  }
-
-  // 2. This part is the same (it stops the *old* music)
+function playMusic(trackName) { // <-- 1. 'async' has been REMOVED
+  
+  // 2. First, aggressively stop ALL music tracks
+  // This is safer than checking 'currentMusic'
   Object.keys(audio).forEach(key => {
-    if (key !== 'winnerReveal' && key !== trackName && !audio[key].paused) {
+    // Stop every track that isn't the 'winnerReveal' sound effect
+    if (key !== 'winnerReveal' && !audio[key].paused) {
       audio[key].pause();
       audio[key].currentTime = 0;
     }
   });
 
-  // 3. Set the new track as current
+  // 3. Set the new current track.
+  // If trackName is null, our job was just to stop all music.
   currentMusic = trackName;
-  
-  // 4. Handle 'null' (for stopping music)
+
+  // 4. If muted, or no new track, we're done.
   if (isMuted || !trackName) {
     return;
   }
   
-  // 5. Guards (same as before, but one is removed)
+  // 5. Guards
   if (!hasInteracted) return; 
   if (!audio[trackName]) return; 
-  
-  // We remove the '!audio[trackName].paused' check because
-  // our new "if (currentMusic === trackName)" check is better.
 
-  // 6. Play the new track
+  // 6. Play the new track (no 'await')
   try {
     audio[trackName].currentTime = 0;
-    await audio[trackName].play();
+    
+    // Call .play() and "fire and forget." We don't wait for it.
+    const playPromise = audio[trackName].play();
+    
+    // We add this to catch errors if the browser blocks the .play()
+    if (playPromise !== undefined) {
+      playPromise.catch(err => {
+        console.warn(`Audio play failed for ${trackName}:`, err);
+      });
+    }
+
   } catch (err) {
     console.warn("Audio play failed.", err);
   }
 }
+// --- [END FIX] ---
+// --- [FIX] Replaced async playSoundEffect function ---
 
-// --- END FIX ---
-
-async function playSoundEffect(soundName) {
+function playSoundEffect(soundName) { // <-- 1. 'async' has been REMOVED
   if (isMuted || !hasInteracted || !audio[soundName]) return;
+  
   try {
     audio[soundName].currentTime = 0;
-    await audio[soundName].play();
+    
+    // Call .play() and "fire and forget"
+    const playPromise = audio[soundName].play();
+    
+    if (playPromise !== undefined) {
+      playPromise.catch(err => {
+        console.warn(`SFX ${soundName} failed to play.`, err);
+      });
+    }
+
   } catch (err) {
     console.warn(`SFX ${soundName} failed to play.`, err);
   }
 }
+// --- [END FIX] ---
 
 
 // --- Rejoin Logic ---
@@ -755,4 +769,5 @@ if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
   volumeSlider.disabled = true;
   volumeSlider.title = "Use your device buttons to adjust volume";
 }
+
 
