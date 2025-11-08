@@ -28,7 +28,15 @@ const greenCards = [
   "Silent", "Silly", "Simple", "Sloppy", "Slow", "Small", "Smelly", "Smooth", "Soft", "Sparkling", "Spicy", "Spooky", "Stinky",
   "Strange", "Stressful", "Strong", "Stupid", "Stylish", "Surprising", "Sweet", "Tall", "Tame", "Tasty", "Tender", "Terrible",
   "Terrific", "Thrilling", "Tough", "Trendy", "Ugly", "Unbelievable", "Unforgettable", "Unhealthy", "Unusual", "Useless",
-  "Warm", "Weak", "Weird", "Wild", "Wonderful", "Wacky", "Zany"
+  "Warm", "Weak", "Weird", "Wild", "Wonderful", "Wacky", "Zany",
+
+  "Adorable", "Backbreaking", "Balanced", "Bold", "Brainy", "Chaotic", "Cheerful", "Classy", "Clueless", "Comforting",
+  "Confident", "Courageous", "Cringy", "Dangerous", "Deadly", "Defensive", "Determined", "Disastrous", "Dramatic",
+  "Energetic", "Epic", "Fake", "Fearless", "Festive", "Futuristic", "Gloomy", "Grumpy", "Hopeful", "Hopeless", "Icy",
+  "Immortal", "Impatient", "Insane", "Jealous", "Lazy", "Legendary", "Lonely", "Luminous", "Mediocre", "Melodramatic",
+  "Microscopic", "Modern", "Mysterious", "Overrated", "Peaceful", "Philosophical", "Power-hungry", "Predictable",
+  "Radiant", "Reliable", "Ridiculous", "Savage", "Shameless", "Sleepy", "Sour", "Suspicious", "Timid", "Toxic",
+  "Unlucky", "Untouchable", "Vicious", "Witty", "Youthful"
 ];
 
 // Red Apple Cards (Things / Nouns)
@@ -88,7 +96,17 @@ const redCards = [
   "The Pyramids", "The Renaissance", "The Rocky Mountains", "The Simpsons", "The Titanic", "The Tooth Fairy", "The White House",
   "Thunder", "Tigers", "Time Travel", "Toads", "Toenails", "Toilets", "Tomatoes", "Tornadoes", "Toys", "Trains", "Trees", "Trolls",
   "Trucks", "Turtles", "Vampires", "Video Games", "Vikings", "Volcanoes", "Vultures", "Waffles", "Walt Disney", "Washington D.C.",
-  "Whales", "Winnie the Pooh", "This Morning", "Wizards", "Worms", "Yellowstone Park", "Yoda"
+  "Whales", "Winnie the Pooh", "This Morning", "Wizards", "Worms", "Yellowstone Park", "Yoda",
+
+  "A Coffee Spill", "A Cracked Screen", "A Fake Smile", "A Forgotten Birthday", "A Lost Remote", "A Random Text from Your Ex",
+  "A Silent Elevator Ride", "A Zombie Apocalypse", "An Empty Fridge", "An Overpriced Coffee", "Apple Watch Tan Line",
+  "Awkward Family Photos", "Bluetooth Headphones", "Broken Promises", "Car Alarms", "Cereal at Midnight", "Creepy Dolls",
+  "Dad Sneakers", "Deep-Fried Oreos", "Fidget Spinners", "Forgotten Passwords", "Gas Station Hot Dogs", "Getting Ghosted",
+  "Group Chats", "Ice Bath", "Inflatable Pool", "Kombucha", "Leftovers", "Lost Wi-Fi Signal", "Midnight Snacks", "Nerf Guns",
+  "Overdue Library Books", "Pickle Jars", "Plastic Straws", "Power Outages", "Pumpkin Spice Everything", "Reality TV Shows",
+  "Ripped Jeans", "Robot Vacuums", "Rollerblades", "Selfies", "Sneezing Pandas", "Spoilers", "Sticky Notes", "Streaming Subscriptions",
+  "Sunburns", "Surge Protectors", "Tangled Headphones", "The Cloud", "The Friend Zone", "The Group Project", "The Matrix",
+  "Traffic Cones", "Unfinished Homework", "Virtual Reality", "Wet Dog Smell", "Wi-Fi", "Zoom Calls"
 ];
 
 // Export a function to get new shuffled decks
@@ -98,3 +116,4 @@ module.exports = {
     redDeck: shuffle([...redCards])
   })
 };
+
