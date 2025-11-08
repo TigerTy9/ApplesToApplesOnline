@@ -275,37 +275,14 @@ socket.on('error', (message) => {
 // --- Button Click Handlers ---
 
 splashScreen.onclick = async () => {
-  if (hasInteracted) return;
+  if (hasInteracted) return; 
   
   splashScreen.querySelector('p').textContent = 'Unlocking audio...';
-
-  try {
-    // Explicitly resume any suspended AudioContext
-    if (typeof AudioContext !== 'undefined') {
-      const ctx = new AudioContext();
-      if (ctx.state === 'suspended') await ctx.resume();
-    } else if (typeof webkitAudioContext !== 'undefined') {
-      const ctx = new webkitAudioContext();
-      if (ctx.state === 'suspended') await ctx.resume();
-    }
-
-    // Directly play and pause each track once — this must happen in a tap handler
-    for (const a of Object.values(audio)) {
-      try {
-        await a.play();
-        a.pause();
-        a.currentTime = 0;
-      } catch (err) {
-        console.warn('Mobile unlock failed for a track (expected on iOS)', err.name);
-      }
-    }
-
-    hasInteracted = true;
-    playMusic('splash');
-    showScreen('home');
-  } catch (e) {
-    console.error('Audio unlock error:', e);
-  }
+  
+  await primeAudio();
+  
+  playMusic('splash'); 
+  showScreen('home'); 
 };
 
 createGameBtn.onclick = () => {
@@ -730,54 +707,67 @@ function createRedCard(cardText) {
 }
 
 
-// --- [FINAL] Volume Slider & Mobile Unlock ---
+// --- Volume Slider & Mobile Audio Unlock ---
 
 document.addEventListener('DOMContentLoaded', () => {
   const allAudioElements = document.querySelectorAll('audio');
   const volumeSlider = document.getElementById('volume-slider');
+  const splashScreen = document.getElementById('splash-screen'); // Get the splash screen
 
-  // Stop if we're missing the key elements
-  if (!volumeSlider || !allAudioElements.length) {
-    console.error("Volume controls not found, cannot initialize.");
-    return;
-  }
+  // Safety check
+  if (!volumeSlider || !splashScreen) return;
 
-  // 1. This is our single, simple function to set all audio volumes
-  const applySliderVolume = () => {
-    // Get the current value from the slider
-    const newVolume = volumeSlider.value;
-    
-    // Apply this volume to every single <audio> tag
+  // This function sets all audio to the slider's current value
+  const setGlobalVolume = (volume) => {
     allAudioElements.forEach(audio => {
-      audio.volume = newVolume;
+      audio.volume = volume;
     });
   };
 
-  // 2. Set volume on page load (for PCs, will be ignored on mobile)
-  applySliderVolume();
+  // 1. Add event listener for when the user drags the slider
+  // This part is the same as before and works fine
+  volumeSlider.addEventListener('input', (event) => {
+    setGlobalVolume(event.target.value);
+  });
 
-  // 3. Set volume every time the slider is moved (works for all platforms)
-  volumeSlider.addEventListener('input', applySliderVolume);
-
-  // 4. The "One-Time-Only" Initial Unlock for Mobile
-  // This function will run exactly once on the user's first tap.
-  const firstInteractionHandler = () => {
+  // 2. Create the "Unlock" Function
+  // This will run ONCE when the user clicks the splash screen
+  const unlockAndSetInitialVolume = () => {
     
-    // Apply the slider's current value.
-    // This is the command that will now work on mobile.
-    applySliderVolume();
+    // STEP A: Set the initial volume for all audio.
+    // This is the command that was failing on page load,
+    // but will work now that the user has clicked.
+    setGlobalVolume(volumeSlider.value);
 
-    // Now, remove this listener from all events
-    // so it never, ever runs again.
-    document.body.removeEventListener('click', firstInteractionHandler);
-    document.body.removeEventListener('touchstart', firstInteractionHandler);
-    document.body.removeEventListener('mousedown', firstInteractionHandler);
+    // STEP B: "Unlock" all audio for mobile
+    // This small "play/pause" hack tells the mobile browser
+    // that this site is allowed to play audio.
+    allAudioElements.forEach(audio => {
+      // We only need to unlock each element once
+      if (audio.unlocked) return; 
+      
+      const originalVolume = audio.volume;
+      audio.volume = 0; // Mute for the "blip"
+      
+      audio.play().then(() => {
+          // Once it successfully plays, pause it and reset
+          audio.pause();
+          audio.currentTime = 0;
+          audio.volume = originalVolume; // Restore true volume
+          audio.unlocked = true; // Mark as unlocked
+        })
+        .catch(e => {
+          // If it fails, just restore volume and mark as unlocked
+          audio.volume = originalVolume;
+          audio.unlocked = true;
+        });
+    });
+
+    // STEP C: Remove this listener so it only ever runs once
+    splashScreen.removeEventListener('click', unlockAndSetInitialVolume);
   };
 
-  // 5. Attach the one-time listener to all possible "first tap" events
-  document.body.addEventListener('click', firstInteractionHandler);
-  document.body.addEventListener('touchstart', firstInteractionHandler);
-  document.body.addEventListener('mousedown', firstInteractionHandler);
+  // 3. Attach the unlock function to the splash screen
+  splashScreen.addEventListener('click', unlockAndSetInitialVolume);
 });
-
-// --- End of final volume code ---
+// --- End of Volume Slider & Mobile Audio Unlock ---
