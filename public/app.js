@@ -739,7 +739,6 @@ function createRedCard(cardText) {
   return cardDiv;
 }
 
-
 document.addEventListener('DOMContentLoaded', () => {
   // Select all audio elements on the page
   const allAudioElements = document.querySelectorAll('audio');
@@ -747,14 +746,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // If the slider element exists, run the code
   if (volumeSlider) {
+    
     // Function to set the volume for ALL audio tags
     const setGlobalVolume = (volume) => {
       allAudioElements.forEach(audio => {
-        audio.volume = volume;
+        // This now correctly uses the 'volume' variable
+        audio.volume = volume; 
       });
     };
 
-    // Set the initial volume from the slider's default value (0.5)
+    // Set the initial volume from the slider's default value
     setGlobalVolume(volumeSlider.value);
 
     // Add an event listener to the slider
@@ -762,12 +763,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const newVolume = event.target.value;
       setGlobalVolume(newVolume);
     });
+    
+    // This check *must* go INSIDE this block
+    if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
+      volumeSlider.disabled = true;
+      volumeSlider.title = "Use your device buttons to adjust volume";
+    }
   }
 });
 
-if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
-  volumeSlider.disabled = true;
-  volumeSlider.title = "Use your device buttons to adjust volume";
-}
 
 
