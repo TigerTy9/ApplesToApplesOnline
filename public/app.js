@@ -731,3 +731,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
+if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
+  volumeSlider.disabled = true;
+  volumeSlider.title = "Use your device buttons to adjust volume";
+}
