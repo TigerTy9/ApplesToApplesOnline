@@ -29,11 +29,12 @@ function getActiveParticipants(roomCode) {
   return gameStates[roomCode].players.filter(p => p.id !== null && !p.isSpectating);
 }
 
+// --- THIS IS THE FIXED FUNCTION ---
 function startNextRound(roomCode) {
   const state = gameStates[roomCode];
   if (!state) return;
 
-  // Activate any spectating players
+  // 1. Activate any spectating players
   state.players.forEach(p => {
     if (p.isSpectating) {
       p.isSpectating = false;
@@ -47,25 +48,45 @@ function startNextRound(roomCode) {
     return;
   }
   
-  // Rotate judge
+  // 2. Find out who the *current* judge is
   let currentJudgePlayerId = null;
   if (state.players[state.currentJudgeIndex]) {
      currentJudgePlayerId = state.players[state.currentJudgeIndex].playerId;
   } else {
+    // Failsafe if judge was removed
     currentJudgePlayerId = allActiveParticipants[0].playerId;
   }
   
+  // 3. Find out who the *next* judge will be
   const currentActiveIndex = allActiveParticipants.findIndex(p => p.playerId === currentJudgePlayerId);
   const nextActiveIndex = (currentActiveIndex + 1) % allActiveParticipants.length;
-  const nextJudgePlayerId = allActiveParticipants[nextActiveIndex].playerId;
   
+  // --- THIS IS THE FIX ---
+  // 4. Check if the *next* judge is the host (index 0)
+  // This means a full rotation is about to complete.
+  if (nextActiveIndex === 0) {
+    state.roundsPlayed += 1;
+    console.log(`Full rotation complete. Rounds played: ${state.roundsPlayed}/${state.turnLimit}`);
+    
+    // 5. Check if the game is over
+    if (state.roundsPlayed >= state.turnLimit) {
+      console.log(`Game ${roomCode} ending.`);
+      state.gamePhase = 'game-over';
+      io.to(roomCode).emit('gameUpdate', state);
+      return; // Stop the game
+    }
+  }
+  // --- END FIX ---
+
+  // 6. Assign the new judge and continue the round
+  const nextJudgePlayerId = allActiveParticipants[nextActiveIndex].playerId;
   state.currentJudgeIndex = state.players.findIndex(p => p.playerId === nextJudgePlayerId);
   
   if (state.greenDeck.length === 0) state.greenDeck = getNewDecks().greenDeck;
   state.currentGreenCard = state.greenDeck.pop();
   state.playedRedCards = {};
-  state.turnPhase = 'playing'; // Set to 'playing'
-  state.gamePhase = 'in-game'; // Make sure it's in-game
+  state.turnPhase = 'playing';
+  state.gamePhase = 'in-game';
   state.lastWinner = null;
 
   state.players.forEach(player => {
@@ -79,6 +100,7 @@ function startNextRound(roomCode) {
 
   io.to(roomCode).emit('gameUpdate', state);
 }
+// --- END FIXED FUNCTION ---
 
 
 io.on('connection', (socket) => {
@@ -278,18 +300,16 @@ io.on('connection', (socket) => {
     }
   });
 
-  // --- NEW: HOST SKIP ROUND ---
   socket.on('hostSkipRound', ({ roomCode }) => {
     const state = gameStates[roomCode];
     if (!state) return;
 
     const host = state.players.find(p => p.isHost);
-    if (!host || host.id !== socket.id) return; // Only host
+    if (!host || host.id !== socket.id) return;
 
-    // Check if game is in a "stuck" phase (judging or winner)
     if (state.gameStarted && (state.turnPhase === 'judging' || state.turnPhase === 'winner')) {
       console.log(`Host skipped round for room ${roomCode}`);
-      startNextRound(roomCode); // Force the next round
+      startNextRound(roomCode); 
     }
   });
 
@@ -326,7 +346,7 @@ io.on('connection', (socket) => {
 
     state.gameStarted = true;
     state.gamePhase = 'in-game';
-    state.roundsPlayed = 0;
+    state.roundsPlayed = 0; // Correctly 0
     state.greenDeck = greenDeck;
     state.redDeck = redDeck; 
     state.currentJudgeIndex = 0;
@@ -404,7 +424,7 @@ io.on('connection', (socket) => {
 
         setTimeout(() => {
           startNextRound(roomCode);
-        }, 6500); // Increased to 6.5 seconds
+        }, 6500); 
       }
     }
   });
