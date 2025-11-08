@@ -828,4 +828,15 @@ hr {
     font-size: 1.5rem;
   }
 }
+/* This code applies ONLY to screens 600px wide or less */
+@media (max-width: 600px) {
+  
+  #volume-controls {
+    /* Move the controls from the top-right 
+       to the bottom-right on mobile */
+    top: auto;       /* Unset the top position */
+    bottom: 15px;    /* Stick it 15px from the bottom */
+  }
+
+}
 
