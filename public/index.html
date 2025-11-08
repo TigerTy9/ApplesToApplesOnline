@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apples to Apples Online</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <button id="mute-btn">🔊 Unmute</button>
+
+  <div id="app-container">
+
+    <div id="splash-screen" class="screen active">
+      <div class="splash-content">
+        <h1>Apples to Apples</h1>
+        <p>Click anywhere to begin</p>
+      </div>
+    </div>
+    
+    <div id="home-screen" class="screen hidden">
+      <div class="screen-content">
+        <h1>Apples to Apples</h1>
+        <p class="subtitle">Online</p>
+        <input type="text" id="player-name" placeholder="Enter Your Name" maxlength="15">
+        
+        <p id="join-status-message" class="hidden"></p>
+        
+        <button id="create-game-btn">Create Game</button>
+        <hr>
+        <input type="text" id="room-code-input" placeholder="Enter Room Code" maxlength="4">
+        <button id="join-game-btn">Join Game</button>
+        
+        <div id="rejoin-block" class="hidden">
+          <hr>
+          <p>You have a game in progress!</p>
+          <button id="rejoin-game-btn">Rejoin Game</button>
+        </div>
+        
+        <p id="error-message" class="hidden"></p>
+      </div>
+    </div>
+
+    <div id="lobby-screen" class="screen hidden">
+      <div class="screen-content">
+        <h2>Room Code: <span id="room-code-display"></span></h2>
+        
+        <div id="game-settings" class="hidden">
+          <h3>Game Settings</h3>
+          <div class="setting-item">
+            <label>Rounds per Player:</label>
+            <div class="setting-controls">
+              <button id="turn-minus" class="setting-btn">-</button>
+              <span id="turn-limit-display">3</span>
+              <button id="turn-plus" class="setting-btn">+</button>
+            </div>
+          </div>
+        </div>
+
+        <h3>Players in Lobby:</h3>
+        <ul id="player-list"></ul>
+        <button id="start-game-btn" class="hidden">Start Game</button>
+      </div>
+    </div>
+
+    <div id="game-screen" class="screen hidden">
+      
+      <div id="game-header">
+        <div id="scoreboard"></div>
+        <div id="game-info">
+          <h2 id="game-status"></h2>
+          <div id="room-code-game" class="hidden"></div>
+        </div>
+        <div id="host-admin-panel" class="hidden">
+          <button id="force-continue-btn">Force to Judging</button>
+          <button id="skip-round-btn">Skip Round</button>
+        </div>
+      </div>
+
+      <div id="winner-announcement" class="hidden"></div>
+      
+      <div class="table">
+        <div id="green-card" class="card green-card">
+          </div>
+        <div id="played-cards-area" data-signature="">
+          </div>
+      </div>
+      
+      <div id="my-hand" class="hand" data-signature="">
+        </div>
+    </div>
+    
+    <div id="game-over-screen" class="screen hidden">
+      <div class="screen-content">
+        <h1>Game Over!</h1>
+        <h2 id="final-winner-display"></h2>
+        <h3>Final Scores:</h3>
+        <ol id="final-scores-list"></ol>
+        <button id="play-again-btn" class="hidden">Play Again</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="approval-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <h3>New Join Request</h3>
+      <p><span id="approval-player-name"></span> wants to join the game.</p>
+      <div class="modal-buttons">
+        <button id="approve-join-btn">Approve</button>
+        <button id="deny-join-btn">Deny</button>
+      </div>
+    </div>
+  </div>
+
+  <audio id="music-splash" src="/music/CatAndMouse.mp3" loop preload="auto"></audio>
+  <audio id="music-lobby" src="/music/DancingSilly.mp3" loop preload="auto"></audio>
+  <audio id="music-playing" src="/music/ASlightMixup.mp3" loop preload="auto"></audio>
+  <audio id="music-judging" src="/music/CuriousTipToe.mp3" loop preload="auto"></audio>
+  <audio id="music-winner" src="/music/SillyChicken.mp3" loop preload="auto"></audio>
+  <audio id="winner-reveal" src="/music/winner-reveal.mp3" preload="auto"></audio>
+
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="app.js"></script> 
+</body>
+</html>
