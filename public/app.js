@@ -39,11 +39,8 @@ const playedCardsArea = document.getElementById('played-cards-area');
 const myHand = document.getElementById('my-hand');
 
 const hostAdminPanel = document.getElementById('host-admin-panel');
-// --- THIS IS THE FIX ---
-// Assign the element to the variable immediately
 const forceContinueBtn = document.getElementById('force-continue-btn');
 const skipRoundBtn = document.getElementById('skip-round-btn');
-// --- END FIX ---
 
 const finalWinnerDisplay = document.getElementById('final-winner-display');
 const finalScoresList = document.getElementById('final-scores-list');
@@ -624,7 +621,7 @@ function updateGameUI(gameState) {
         winnerAnnouncement.classList.remove('hidden');
         winnerAnnouncement.style.animation = 'fadeIn 0.5s ease-out 2.5s forwards';
 
-      }, 1000); // This is 1 second, not 1000--
+      }, 1000); 
     }
   }
   
@@ -648,24 +645,59 @@ function updateGameUI(gameState) {
   }
 }
 
+// --- THIS IS THE NEW, FIXED FUNCTION ---
 function updateGameOverUI(gameState) {
+  // 1. Sort players by score
   const sortedPlayers = [...gameState.players].sort((a, b) => b.score - a.score);
   
-  finalWinnerDisplay.textContent = `🏆 ${sortedPlayers[0].name} wins! 🏆`;
+  if (sortedPlayers.length === 0) return; // Safety check
+
+  // 2. Find the highest score
+  const highestScore = sortedPlayers[0].score;
   
+  // 3. Find all players with that score
+  const winners = sortedPlayers.filter(p => p.score === highestScore);
+
+  // 4. Set the winner display text
+  if (winners.length > 1) {
+    // It's a tie!
+    const winnerNames = winners.map(p => p.name);
+    let winnerText = '';
+    if (winnerNames.length === 2) {
+      winnerText = winnerNames.join(' and ');
+    } else {
+      // For 3+ players, adds an Oxford comma
+      winnerText = winnerNames.slice(0, -1).join(', ') + ', and ' + winnerNames[winnerNames.length - 1];
+    }
+    finalWinnerDisplay.textContent = `🏆 It's a tie between ${winnerText}! 🏆`;
+  } else {
+    // Single winner
+    finalWinnerDisplay.textContent = `🏆 ${winners[0].name} wins! 🏆`;
+  }
+  
+  // 5. Render the full scoreboard
   finalScoresList.innerHTML = '';
   sortedPlayers.forEach((player, index) => {
     const li = document.createElement('li');
     li.textContent = `${index + 1}. ${player.name} - ${player.score} points`;
+    
+    // Highlight all winners in the list
+    if (player.score === highestScore) {
+       li.classList.add('winner-row');
+    }
+
     finalScoresList.appendChild(li);
   });
   
+  // 6. Show "Play Again" button for host
   if (iAmHost) {
     playAgainBtn.classList.remove('hidden');
   } else {
     playAgainBtn.classList.add('hidden');
   }
 }
+// --- END FIXED FUNCTION ---
+
 
 function createRedCard(cardText) {
   const cardDiv = document.createElement('div');
