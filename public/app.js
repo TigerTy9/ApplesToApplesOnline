@@ -707,12 +707,11 @@ function createRedCard(cardText) {
 }
 
 
-// --- [NEW] Volume Slider & Mobile Fix ---
+// --- [FINAL] Volume Slider & Mobile Unlock ---
 
 document.addEventListener('DOMContentLoaded', () => {
   const allAudioElements = document.querySelectorAll('audio');
   const volumeSlider = document.getElementById('volume-slider');
-  const splashScreen = document.getElementById('splash-screen');
 
   // Stop if we're missing the key elements
   if (!volumeSlider || !allAudioElements.length) {
@@ -721,7 +720,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // 1. This is our single, simple function to set all audio volumes
-  const setGlobalVolume = () => {
+  const applySliderVolume = () => {
     // Get the current value from the slider
     const newVolume = volumeSlider.value;
     
@@ -731,29 +730,31 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
-  // 2. Now we call this function at all 3 key moments:
+  // 2. Set volume on page load (for PCs, will be ignored on mobile)
+  applySliderVolume();
 
-  // A) Set volume on page load (for PCs)
-  setGlobalVolume();
+  // 3. Set volume every time the slider is moved (works for all platforms)
+  volumeSlider.addEventListener('input', applySliderVolume);
 
-  // B) Set volume every time the slider is moved (for PCs & Mobile)
-  volumeSlider.addEventListener('input', setGlobalVolume);
-
-  // C) Set volume on the first click (for Mobile's initial volume)
-  if (splashScreen) {
+  // 4. The "One-Time-Only" Initial Unlock for Mobile
+  // This function will run exactly once on the user's first tap.
+  const firstInteractionHandler = () => {
     
-    // We create a function that will run only ONCE
-    const setInitialMobileVolume = () => {
-      setGlobalVolume();
-      
-      // After it runs once, remove it so it doesn't run again
-      splashScreen.removeEventListener('click', setInitialMobileVolume);
-    };
-    
-    // Add the one-time listener to the splash screen
-    splashScreen.addEventListener('click', setInitialMobileVolume);
-  }
+    // Apply the slider's current value.
+    // This is the command that will now work on mobile.
+    applySliderVolume();
+
+    // Now, remove this listener from all events
+    // so it never, ever runs again.
+    document.body.removeEventListener('click', firstInteractionHandler);
+    document.body.removeEventListener('touchstart', firstInteractionHandler);
+    document.body.removeEventListener('mousedown', firstInteractionHandler);
+  };
+
+  // 5. Attach the one-time listener to all possible "first tap" events
+  document.body.addEventListener('click', firstInteractionHandler);
+  document.body.addEventListener('touchstart', firstInteractionHandler);
+  document.body.addEventListener('mousedown', firstInteractionHandler);
 });
 
-// --- End of new volume code ---
-
+// --- End of final volume code ---
