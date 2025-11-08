@@ -1,0 +1,17 @@
+{
+  "name": "apples-chat",
+  "version": "1.0.0",
+  "description": "Simple multiplayer chat base",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "socket.io": "^4.8.1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
