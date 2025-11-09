@@ -30,7 +30,7 @@ const greenCards = [
   "Terrific", "Thrilling", "Tough", "Trendy", "Ugly", "Unbelievable", "Unforgettable", "Unhealthy", "Unusual", "Useless",
   "Warm", "Weak", "Weird", "Wild", "Wonderful", "Wacky", "Zany",
 
-  "Adorable", "Backbreaking", "Balanced", "Bold", "Brainy", "Chaotic", "Cheerful", "Classy", "Clueless", "Comforting",
+  "Adorable", "Backbreaking", "Bold", "Brainy", "Chaotic", "Cheerful", "Classy", "Clueless", "Comforting",
   "Confident", "Courageous", "Cringy", "Dangerous", "Deadly", "Defensive", "Determined", "Disastrous", "Dramatic",
   "Energetic", "Epic", "Fake", "Fearless", "Festive", "Futuristic", "Gloomy", "Grumpy", "Hopeful", "Hopeless", "Icy",
   "Immortal", "Impatient", "Insane", "Jealous", "Lazy", "Legendary", "Lonely", "Luminous", "Mediocre", "Melodramatic",
@@ -116,4 +116,5 @@ module.exports = {
     redDeck: shuffle([...redCards])
   })
 };
+
 
