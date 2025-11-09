@@ -53,7 +53,7 @@ const redCards = [
   "That one sock that disappears", "Waiting in line", "Waking up before the alarm", "A crazy cat lady", "A guy with a man-bun",
   "A grumpy old man", "A psychic", "A street magician", "Baby Yoda", "Bob Ross", "Captain America", "Darth Vader", "Dracula",
   "Dwayne 'The Rock' Johnson", "Elon Musk", "Gollum", "Hulk", "Keanu Reeves", "My Dad's jokes", "Ninjas", "Pirates",
-  "Santa Claus", "SpongeBob SquarePants", "Taylor Swift", "That one annoying relative", "The Kardashians", "The Queen of England",
+  "Santa Claus", "SpongeBob SquarePants", "Taylor Swift", "That one annoying relative", "The Queen of England",
   "Zombies", "A bouncy castle", "A high-five", "A water balloon fight", "Action movies", "Area 51", "Bad karaoke", "Bubble wrap",
   "Comic books", "Couch cushions", "Crying babies", "Disco balls", "Fancy hats", "Fanny packs", "Glitter", "Helium balloons",
   "Hula hoops", "Killer whales", "Lava lamps", "Memes", "My first car", "Pillow forts", "Popcorn", "Rubber ducks", "Scarecrows",
@@ -116,5 +116,6 @@ module.exports = {
     redDeck: shuffle([...redCards])
   })
 };
+
 
 
